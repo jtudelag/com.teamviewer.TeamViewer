@@ -1,0 +1,61 @@
+{
+    "app-id": "com.teamviewer.TeamViewer",
+    "runtime": "org.kde.Platform",
+    "runtime-version": "5.11",
+    "sdk": "org.kde.Sdk",
+    "command": "teamviewer",
+    "separate-locales": false,
+    "tags": ["proprietary"],
+    "finish-args": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--socket=pulseaudio",
+        "--share=network",
+        "--device=dri",
+        "--filesystem=host",
+        "--allow=devel"
+    ],
+    "modules": [
+        {
+            "name": "teamviewer",
+            "buildsystem": "simple",
+            "build-commands": [
+                "tar vxf teamviewer.tar.xz -C /app/",
+                "rm -f teamviewer.tar.xz",
+                "chmod -R a-s,go+rX,go-w /app/teamviewer/*",
+                "mkdir -p export/share/applications",
+                "sed 's|Icon=TeamViewer|Icon=com.teamviewer.TeamViewer|' /app/teamviewer/tv_bin/desktop/com.teamviewer.TeamViewer.desktop > export/share/applications/com.teamviewer.TeamViewer.desktop",
+                "mkdir -p export/share/icons/hicolor/256x256/apps",
+                "cp /app/teamviewer/tv_bin/desktop/teamviewer_256.png export/share/icons/hicolor/256x256/apps/com.teamviewer.TeamViewer.png",
+            
+                "install -Dm755 teamviewer.sh /app/bin/teamviewer",
+                "install -Dm644 com.teamviewer.TeamViewer.appdata.xml /app/share/appdata/com.teamviewer.TeamViewer.appdata.xml"
+            ],
+            "sources" : [
+                {
+                    "type": "file",
+                    "dest-filename": "teamviewer.tar.xz",
+                    "only-arches": ["x86_64"],
+                    "url": "https://dl.teamviewer.com/download/linux/version_14x/teamviewer_14.5.1691_amd64.tar.xz",
+                    "sha256": "808f452266c7c68468197f19b34b6cb7c91055a3ea7e3f025bf0123b2ca93fff",
+                    "size": 12380784
+                },
+                {
+                    "type": "script",
+                    "dest-filename": "teamviewer.sh",
+                    "commands": [
+                        "# Without the daemon, no ID & PAssword are generated",
+                        "/app/teamviewer/tv_bin/teamviewerd -d &",
+                        "exec /app/teamviewer/teamviewer \"$@\""
+                    ]
+                },
+                {
+                    "type": "file",
+                    "path": "com.teamviewer.TeamViewer.appdata.xml"
+                }
+               
+            ]
+        }
+    ]
+}

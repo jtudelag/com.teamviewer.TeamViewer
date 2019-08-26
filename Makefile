@@ -6,3 +6,6 @@ run:
 
 clean:
 	rm -rf .flatpak-builder/
+
+debug:
+	flatpak-builder --run build-dir com.teamviewer.TeamViewer.json /bin/bash

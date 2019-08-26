@@ -10,6 +10,7 @@
     "tags": ["proprietary"],
     "finish-args": [
         "--share=ipc",
+	"--socket=session-bus",
         "--socket=x11",
         "--socket=wayland",
         "--socket=pulseaudio",
@@ -26,11 +27,13 @@
                 "tar vxf teamviewer.tar.xz -C /app/",
                 "rm -f teamviewer.tar.xz",
                 "chmod -R a-s,go+rX,go-w /app/teamviewer/*",
-                "mkdir -p export/share/applications",
+                "install -d export/share/applications",
                 "sed 's|Icon=TeamViewer|Icon=com.teamviewer.TeamViewer|' /app/teamviewer/tv_bin/desktop/com.teamviewer.TeamViewer.desktop > export/share/applications/com.teamviewer.TeamViewer.desktop",
-                "mkdir -p export/share/icons/hicolor/256x256/apps",
-                "cp /app/teamviewer/tv_bin/desktop/teamviewer_256.png export/share/icons/hicolor/256x256/apps/com.teamviewer.TeamViewer.png",
-            
+		"install -d /app/share/dbus-1/services",
+		"sed 's|opt|app|' /app/teamviewer/tv_bin/script/com.teamviewer.TeamViewer.service > /app/share/dbus-1/services/com.teamviewer.TeamViewer.service",
+		"sed 's|opt|app|' /app/teamviewer/tv_bin/script/com.teamviewer.TeamViewer.Desktop.service > /app/share/dbus-1/services/com.teamviewer.TeamViewer.Desktop.service",
+                "install -d export/share/icons/hicolor/256x256/apps",
+                "install -D /app/teamviewer/tv_bin/desktop/teamviewer_256.png export/share/icons/hicolor/256x256/apps/com.teamviewer.TeamViewer.png",
                 "install -Dm755 teamviewer.sh /app/bin/teamviewer",
                 "install -Dm644 com.teamviewer.TeamViewer.appdata.xml /app/share/appdata/com.teamviewer.TeamViewer.appdata.xml"
             ],

@@ -1,7 +1,9 @@
 {
     "app-id": "com.teamviewer.TeamViewer",
+    "base": "io.qt.qtwebkit.BaseApp",
+    "base-version": "5.12",
     "runtime": "org.kde.Platform",
-    "runtime-version": "5.11",
+    "runtime-version": "5.12",
     "sdk": "org.kde.Sdk",
     "command": "teamviewer",
     "separate-locales": false,
@@ -45,8 +47,10 @@
                     "type": "script",
                     "dest-filename": "teamviewer.sh",
                     "commands": [
-                        "# Without the daemon, no ID & PAssword are generated",
-                        "/app/teamviewer/tv_bin/teamviewerd -d &",
+                        "# Without the daemon, no Id & Password are generated",
+                        "ps -ef",
+                        "/app/teamviewer/tv_bin/teamviewerd -d",
+                        "ps -ef",
                         "exec /app/teamviewer/teamviewer \"$@\""
                     ]
                 },
